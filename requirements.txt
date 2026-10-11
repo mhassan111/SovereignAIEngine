@@ -1,0 +1,60 @@
+# ============================================================
+# Sovereign AI Engine - serving, API, benchmarking, observability
+# Python 3.10-3.12 | CUDA-capable Linux GPU host (on-prem / private GPU VM)
+# Install in its own venv / Docker image (see requirements-train.txt for training)
+# ============================================================
+
+# --- Inference (vLLM pins its own exact torch build; let it choose) ---
+vllm>=0.6.0; sys_platform == "linux"   # Linux/WSL2 only; skipped on macOS
+
+# --- Model / adapter loading (merge LoRA adapters before serving) ---
+transformers>=4.45.0
+peft>=0.13.0
+accelerate>=1.0.0
+safetensors>=0.4.5
+huggingface-hub>=0.25.0
+sentencepiece>=0.2.0
+
+# --- Quantization (for inference optimization experiments) ---
+bitsandbytes>=0.44.0; sys_platform != "darwin"
+# autoawq>=0.2.6          # optional: AWQ quantization
+# auto-gptq>=0.7.1        # optional: GPTQ quantization
+
+# --- API layer ---
+fastapi>=0.115.0
+uvicorn[standard]>=0.30.0
+pydantic>=2.9.0
+pydantic-settings>=2.5.0
+httpx>=0.27.0
+python-dotenv>=1.0.1
+sse-starlette>=2.1.0       # streaming (SSE) responses
+
+# --- Dataset & evaluation (BillSum) ---
+datasets>=3.0.0
+evaluate>=0.4.3
+rouge-score>=0.1.2
+bert-score>=0.3.13
+nltk>=3.9.1
+absl-py>=2.1.0
+
+# --- Benchmarking (P95 latency, throughput, cost modeling) ---
+numpy>=1.26.0
+pandas>=2.2.0
+matplotlib>=3.9.0
+aiohttp>=3.10.0
+tqdm>=4.66.0
+pynvml>=11.5.0             # GPU utilization / memory sampling
+psutil>=6.0.0
+locust>=2.31.0             # optional load testing
+
+# --- Observability (Arize) ---
+arize>=7.0.0
+arize-phoenix>=5.0.0
+openinference-instrumentation-openai>=0.1.0   # vLLM exposes an OpenAI-compatible API
+opentelemetry-sdk>=1.27.0
+opentelemetry-exporter-otlp>=1.27.0
+
+# --- Dev / quality ---
+pytest>=8.3.0
+pytest-asyncio>=0.24.0
+ruff>=0.6.0
